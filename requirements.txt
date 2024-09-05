@@ -10,6 +10,6 @@ st_click_detector
 beautifulsoup4
 spacy==3.4.0
 streamlit_authenticator==0.3.2
-tensorflow
+tensorflow==2.13.1
 joblib
 opencv-python
