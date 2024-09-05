@@ -12,4 +12,4 @@ spacy
 streamlit_authenticator==0.3.2
 tensorflow
 joblib
-cv2
+opencv-python
