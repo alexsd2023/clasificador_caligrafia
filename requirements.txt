@@ -10,3 +10,4 @@ st_click_detector
 beautifulsoup4
 spacy
 streamlit_authenticator==0.3.2
+tensorflow
