@@ -1,5 +1,6 @@
 altair
 numpy==1.23.1
+distutils
 pandas
 pydeck
 streamlit==1.29.0
