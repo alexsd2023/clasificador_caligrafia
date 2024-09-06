@@ -13,3 +13,4 @@ tensorflow
 joblib
 opencv-python-headless
 scikit-learn
+scikit-image
