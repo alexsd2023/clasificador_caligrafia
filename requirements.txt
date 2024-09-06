@@ -1,6 +1,6 @@
 streamlit==1.29.0
 streamlit-option-menu
-numpy
+numpy==1.23.1
 distutils
 pandas
 pydeck
