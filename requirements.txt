@@ -1,5 +1,3 @@
-python
-altair
 numpy
 distutils
 pandas
