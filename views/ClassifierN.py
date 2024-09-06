@@ -84,12 +84,19 @@ def predict(file, modelname, classes, model):
         #st.write('Prediction: ', prediction[0])
         return(prediction[0]) 
     
-def update(df, image, col):
-    #df.at[image, col] = st.session_state[f'{col}_{image}']
-    #print('IMAGEN MODIFICADA: ', image)
-    df.at[0, 'Incorrect'] = True
-    st.session_state.df= df
-
+def update(image_name, col):
+    
+    isclicked= st.session_state[f'label_{image_name}']
+    print('Is clicked: ', isclicked)
+    if 'df' in st.session_state.keys():
+        df= st.session_state.df
+        df.loc[df['Image Name'] == image_name, col]= isclicked
+        
+        
+        #df.at[image_name, col]= isclicked
+        print(df.head)
+        st.session_state.df= df
+        #st.rerun()
 def run():    
    
     
@@ -105,11 +112,11 @@ def run():
     #)
     #st.set_option('widemode', True)
     uploaded_files= st.file_uploader("Choose the images files", type={'jpg'},  accept_multiple_files= True)
-    if uploaded_files != None:
-        df= pd.DataFrame({'Image Name': [file.name for file in uploaded_files],'Label': ['Unlabelled']*len(uploaded_files), 'Incorrect': [False]*len(uploaded_files)})
-        st.session_state.df= df
-    else:
-        df= pd.DataFrame()
+    #if uploaded_files != None:
+    #    df= pd.DataFrame({'Image Name': [file.name for file in uploaded_files],'Label': ['Unlabelled']*len(uploaded_files), 'Incorrect': [False]*len(uploaded_files)})
+    #    st.session_state.df= df
+    #else:
+    #    df= pd.DataFrame()
     
 
     controls= st.columns(3)
@@ -125,19 +132,20 @@ def run():
         batch= uploaded_files[(page-1)*batch_size:page*batch_size]
         grid= st.columns(row_size)
         col= 0
+        labels= []
         for image in batch:
             with grid[col]:
                 result= predict(image, 'SVN', classes, model)
                 caption= image.name + '\n' + str(result)
                 st.image(image, width= 150, caption=caption)
                 # value= df.at[image.name, 'Label'],
-                st.checkbox('Incorrect', key=f'label_{image.name}', value= False,  on_change= update, args=(df, image.name, 'Label'))
+                labels.append([str(result)])
+                st.checkbox('Incorrect', key=f'label_{image.name}', value= False,  on_change= update, args=(image.name, 'Incorrect'))
             col= (col+1) % row_size
-
-        st.write('Predictions')   
+        if not 'df' in st.session_state.keys():
+            df= pd.DataFrame({'Image Name': [file.name for file in uploaded_files],'Label':labels, 'Incorrect': [False]*len(uploaded_files)})
+            st.session_state.df=df
         
-        if 'df' in st.session_state.keys():
-            df= st.session_state.df
-        st.dataframe(df[df['Incorrect'] == False])
-   
+        df= st.session_state.df
+        st.dataframe(df)
 
