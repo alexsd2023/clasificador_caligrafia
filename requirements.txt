@@ -1,9 +1,9 @@
+streamlit==1.29.0
+streamlit-option-menu
 numpy
 distutils
 pandas
 pydeck
-streamlit==1.29.0
-streamlit-option-menu
 matplotlib
 st-annotated-text
 st_click_detector
