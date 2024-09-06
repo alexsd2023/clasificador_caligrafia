@@ -1,7 +1,5 @@
 streamlit==1.29.0
 streamlit-option-menu
-distutils
-numpy==1.23.1
 pandas
 pydeck
 matplotlib
