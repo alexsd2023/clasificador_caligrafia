@@ -7,7 +7,7 @@ matplotlib
 st-annotated-text
 st_click_detector
 beautifulsoup4
-spacy==3.4.0
+spacy
 streamlit_authenticator==0.3.2
 tensorflow
 joblib
