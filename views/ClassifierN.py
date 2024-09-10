@@ -112,12 +112,18 @@ def run():
     #)
     #st.set_option('widemode', True)
     uploaded_files= st.file_uploader("Choose the images files", type={'jpg'},  accept_multiple_files= True)
+    df= pd.DataFrame({'Image Name': [file.name for file in uploaded_files],'Label':['unlabelled']*len(uploaded_files), 'Incorrect': [False]*len(uploaded_files)})
+            
     #if uploaded_files != None:
     #    df= pd.DataFrame({'Image Name': [file.name for file in uploaded_files],'Label': ['Unlabelled']*len(uploaded_files), 'Incorrect': [False]*len(uploaded_files)})
     #    st.session_state.df= df
     #else:
     #    df= pd.DataFrame()
     
+    if st.button('Delete all', type='primary'):
+        st.session_state.clear()
+        st.rerun("fragment")
+        #del st.session_state['df']
 
     controls= st.columns(3)
     with controls[0]:
@@ -127,21 +133,34 @@ def run():
     num_batches= ceil(len(uploaded_files)/batch_size)
     with controls[2]:
         page= st.selectbox('Page', range(1, num_batches+1))
+    
 
     if len(uploaded_files) != 0:    
         batch= uploaded_files[(page-1)*batch_size:page*batch_size]
-        grid= st.columns(row_size)
+
+        grid_images= st.columns(row_size)
+        grid_names= st.columns(row_size)
+        grid_predictions= st.columns(row_size)
+
         col= 0
         labels= []
+        for file in uploaded_files:
+            result= predict(file, 'SVN', classes, model)
+            labels.append([str(result)])
+
         for image in batch:
-            with grid[col]:
-                result= predict(image, 'SVN', classes, model)
-                caption= image.name + '\n' + str(result)
+            with grid_images[col]:
+                
+                caption= image.name + '\n' 
                 st.image(image, width= 150, caption=caption)
                 # value= df.at[image.name, 'Label'],
-                labels.append([str(result)])
-                st.checkbox('Incorrect', key=f'label_{image.name}', value= False,  on_change= update, args=(image.name, 'Incorrect'))
+            with grid_names[col]:
+                value= df.loc[df['Image Name']==image.name, 'Incorrect']
+                print(value)
+                st.write(str(result))
+                st.checkbox('Incorrect', key=f'label_{image.name}', value=False,  on_change= update, args=(image.name, 'Incorrect'))
             col= (col+1) % row_size
+
         if not 'df' in st.session_state.keys():
             df= pd.DataFrame({'Image Name': [file.name for file in uploaded_files],'Label':labels, 'Incorrect': [False]*len(uploaded_files)})
             st.session_state.df=df
