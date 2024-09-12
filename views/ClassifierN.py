@@ -23,6 +23,8 @@ import cv2
 from skimage import feature
 from math import ceil
 
+
+
 class LocalBinaryPatterns:
     def __init__(self, numPoints, radius):
         # store the number of points and radius
@@ -111,9 +113,13 @@ def run():
     #     index=0,
     #)
     #st.set_option('widemode', True)
-    uploaded_files= st.file_uploader("Choose the images files", type={'jpg'},  accept_multiple_files= True)
+    if not 'uploader_key' in st.session_state.keys():
+        st.session_state['uploader_key']= 0
+
+    print('UPLOADER KEY: ', st.session_state['uploader_key'])
+    uploaded_files= st.file_uploader("Choose the images files", type={'jpg'},  accept_multiple_files= True, key=st.session_state['uploader_key'])
     df= pd.DataFrame({'Image Name': [file.name for file in uploaded_files],'Label':['unlabelled']*len(uploaded_files), 'Incorrect': [False]*len(uploaded_files)})
-            
+    print(uploaded_files)  
     #if uploaded_files != None:
     #    df= pd.DataFrame({'Image Name': [file.name for file in uploaded_files],'Label': ['Unlabelled']*len(uploaded_files), 'Incorrect': [False]*len(uploaded_files)})
     #    st.session_state.df= df
@@ -121,9 +127,12 @@ def run():
     #    df= pd.DataFrame()
     
     if st.button('Delete all', type='primary'):
-        st.session_state.clear()
-        st.rerun("fragment")
-        #del st.session_state['df']
+       st.session_state['uploader_key']+= 1
+       uploaded_files= []
+       print('Delete all pressed')
+       del st.session_state['df']
+       st.rerun()
+        
 
     controls= st.columns(3)
     with controls[0]:
@@ -135,36 +144,38 @@ def run():
         page= st.selectbox('Page', range(1, num_batches+1))
     
 
-    if len(uploaded_files) != 0:    
-        batch= uploaded_files[(page-1)*batch_size:page*batch_size]
+    
+    if len(uploaded_files) != 0: 
+          
+            batch= uploaded_files[(page-1)*batch_size:page*batch_size]
 
-        grid_images= st.columns(row_size)
-        grid_names= st.columns(row_size)
-        grid_predictions= st.columns(row_size)
+            grid_images= st.columns(row_size)
+            grid_names= st.columns(row_size)
+            grid_predictions= st.columns(row_size)
 
-        col= 0
-        labels= []
-        for file in uploaded_files:
-            result= predict(file, 'SVN', classes, model)
-            labels.append([str(result)])
+            col= 0
+            labels= []
+            for file in uploaded_files:
+                result= predict(file, 'SVN', classes, model)
+                labels.append([str(result)])
 
-        for image in batch:
-            with grid_images[col]:
-                
-                caption= image.name + '\n' 
-                st.image(image, width= 150, caption=caption)
-                # value= df.at[image.name, 'Label'],
-            with grid_names[col]:
-                value= df.loc[df['Image Name']==image.name, 'Incorrect']
-                print(value)
-                st.write(str(result))
-                st.checkbox('Incorrect', key=f'label_{image.name}', value=False,  on_change= update, args=(image.name, 'Incorrect'))
-            col= (col+1) % row_size
+            for image in batch:
+                with grid_images[col]:
+                    
+                    caption= image.name + '\n' 
+                    st.image(image, width= 150, caption=caption)
+                    # value= df.at[image.name, 'Label'],
+                with grid_names[col]:
+                    value= df.loc[df['Image Name']==image.name, 'Incorrect']
+                    print(value)
+                    st.write(str(result))
+                    st.checkbox('Incorrect', key=f'label_{image.name}', value=False,  on_change= update, args=(image.name, 'Incorrect'))
+                col= (col+1) % row_size
 
-        if not 'df' in st.session_state.keys():
-            df= pd.DataFrame({'Image Name': [file.name for file in uploaded_files],'Label':labels, 'Incorrect': [False]*len(uploaded_files)})
-            st.session_state.df=df
-        
-        df= st.session_state.df
-        st.dataframe(df)
+            if not 'df' in st.session_state.keys():
+                df= pd.DataFrame({'Image Name': [file.name for file in uploaded_files],'Label':labels, 'Incorrect': [False]*len(uploaded_files)})
+                st.session_state.df=df
+            
+            df= st.session_state.df
+            st.dataframe(df)
 
