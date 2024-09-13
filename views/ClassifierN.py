@@ -58,7 +58,7 @@ def predict(file, modelname, classes, model):
         inp = tf.constant(inp_numpy, dtype='float32')
         class_scores = model(inp)[0].numpy()
         
-        st.write("Class predicted : ", classes[class_scores.argmax()])
+        #st.write("Class predicted : ", classes[class_scores.argmax()])
         data= []
         for index in range(0, len(class_scores)):
             data.append([classes[index], round(class_scores[index], 2)])
@@ -103,7 +103,7 @@ def update(image_name, col):
 def run():    
    
     
-    st.title("Classifier")
+    st.title(":red[Handwriting] _Text_ :red[Classification]")
     model = tf.saved_model.load('./models/')
     classes = [ "ITALICA_REDONDA" ,  "ITALICA_CURSIVA" ,  "PROCESAL_2" ,  "Procesal_encadenada" , ]
     
