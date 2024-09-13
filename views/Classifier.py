@@ -88,7 +88,7 @@ def run():
     st.title("Classifier")
     model = tf.saved_model.load('./models/')
     classes = [ "ITALICA_REDONDA" ,  "ITALICA_CURSIVA" ,  "PROCESAL_2" ,  "Procesal_encadenada" , ]
-    st.write(tf.__version__)
+    #st.write(tf.__version__)
     modelname = st.radio(
          "Select a model",
         ["EfficientNET", "SVN","MobileNET", "VGG 16/19"],
