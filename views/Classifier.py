@@ -46,7 +46,8 @@ class LocalBinaryPatterns:
 def predict(file, modelname, classes, model):
     
     st.image(file)
-    if modelname == 'EfficientNET':
+
+    if modelname == 'EfficientNET' or modelname == 'MobileNET':
         img= Image.open(file).convert('RGB')
         img= img.convert('RGB')  
         img = img.resize((300, 300 * img.size[1] // img.size[0]))
@@ -87,7 +88,7 @@ def run():
     label= ":red[Handwriting] <_Text_> :red[Classification]"
 
     st.title(label)
-    model = tf.saved_model.load('./models/')
+    
     classes = [ "ITALICA_REDONDA" ,  "ITALICA_CURSIVA" ,  "PROCESAL_2" ,  "Procesal_encadenada" , ]
     st.write(tf.__version__)
     modelname = st.radio(
@@ -95,6 +96,12 @@ def run():
         ["EfficientNET", "SVN","MobileNET", "VGG 16/19"],
          index=0,
     )
+    if modelname == 'EfficientNET':
+        model = tf.saved_model.load('./models/')
+    elif modelname == 'MobileNET':
+        model = tf.saved_model.load('./models/MODELO_TF_MOBILENET/')
+
+
     st.session_state['modelname']= modelname
     #st.set_option('widemode', True)
     uploaded_files= st.file_uploader("Choose the images files", type={'jpg'},  accept_multiple_files= True)

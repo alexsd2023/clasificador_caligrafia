@@ -104,7 +104,13 @@ def run():
    
     
     st.title(":red[Handwriting] _Text_ :red[Classification]")
-    model = tf.saved_model.load('./models/')
+    model= None
+    if 'modelname' in st.session_state.keys():
+        if st.session_state['modelname'] == 'EfficientNET':
+            model = tf.saved_model.load('./models/')
+        elif st.session_state['modelname'] == 'MobileNET': 
+            model = tf.saved_model.load('./models/MODELO_TF_MOBILENET/')
+
     classes = [ "ITALICA_REDONDA" ,  "ITALICA_CURSIVA" ,  "PROCESAL_2" ,  "Procesal_encadenada" , ]
     
     
@@ -162,9 +168,15 @@ def run():
 
             col= 0
             labels= []
+            if 'modelname' in st.session_state.keys():
+                modelname= st.session_state['modelname']
+            else:
+                modelname= 'EfficientNET'
+                model = tf.saved_model.load('./models/')
+                
             for file in uploaded_files:
-                print(st.session_state['modelname'])
-                result= predict(file, st.session_state['modelname'], classes, model)
+                
+                result= predict(file, modelname , classes, model)
                 labels.append([str(result)])
 
             for image in batch:
