@@ -35,15 +35,15 @@ def set_background(png_file):
     </style>
     ''' % bin_str
     st.markdown(page_bg_img, unsafe_allow_html=True)
-#usernames= ['asanchez', 'patricia', 'mariana', 'rodrigo']
-#names= ['Alexander', 'Patricia', 'Mariana', 'Rodrigo']
-#passwords= ['12345' ,'12345', '12345', '12345']
-#credentials = {"usernames":{}}
+usernames= ['asanchez', 'patricia', 'mariana', 'rodrigo']
+names= ['Alexander', 'Patricia', 'Mariana', 'Rodrigo']
+passwords= ['12345' ,'12345', '12345', '12345']
+credentials = {"usernames":{}}
 
-#hashed_passwords = stauth.Hasher(passwords).generate()
-#for un, name, pw in zip(usernames, names, hashed_passwords):   
-#    user_dict = {"name":name,"password":pw}
-#    credentials["usernames"].update({un:user_dict})
+hashed_passwords = stauth.Hasher(passwords).generate()
+for un, name, pw in zip(usernames, names, hashed_passwords):   
+    user_dict = {"name":name,"password":pw}
+    credentials["usernames"].update({un:user_dict})
 
 #authenticator = stauth.Authenticate(credentials, "lanccookie", "lanckey", cookie_expiry_days=30)
 
@@ -53,13 +53,13 @@ authenticator = stauth.Authenticate(
    config['cookie']['name'],
    config['cookie']['key'],
    config['cookie']['expiry_days'],
-   config['pre-authorized']
+   config['preauthorized']
 )
 st.session_state['authenticator']= authenticator
 name= ''
 authentication_status= False
 username= ''
-name, authentication_status, username= authenticator.login()
+name, authentication_status, username= authenticator.login("Login", "main")
 #set_background('./background.png')
 
 if authentication_status:
