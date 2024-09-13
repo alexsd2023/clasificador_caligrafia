@@ -94,6 +94,7 @@ def run():
         ["EfficientNET", "SVN","MobileNET", "VGG 16/19"],
          index=0,
     )
+    st.session_state['modelname']= modelname
     #st.set_option('widemode', True)
     uploaded_files= st.file_uploader("Choose the images files", type={'jpg'},  accept_multiple_files= True)
     for uploaded_file in uploaded_files:

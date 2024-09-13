@@ -63,8 +63,9 @@ def predict(file, modelname, classes, model):
         for index in range(0, len(class_scores)):
             data.append([classes[index], round(class_scores[index], 2)])
         df= pd.DataFrame(data, columns=('Class', 'Score'))
-        st.table(df) 
-
+        #st.table(df) 
+        return (classes[class_scores.argmax()])
+    
     elif modelname == 'SVN':
         desc = LocalBinaryPatterns(24, 8)
         
@@ -117,9 +118,14 @@ def run():
         st.session_state['uploader_key']= 0
 
     print('UPLOADER KEY: ', st.session_state['uploader_key'])
+    
     uploaded_files= st.file_uploader("Choose the images files", type={'jpg'},  accept_multiple_files= True, key=st.session_state['uploader_key'])
     df= pd.DataFrame({'Image Name': [file.name for file in uploaded_files],'Label':['unlabelled']*len(uploaded_files), 'Incorrect': [False]*len(uploaded_files)})
-    print(uploaded_files)  
+    if len(uploaded_files) > 0:
+        st.session_state['uploaded_files']= uploaded_files
+    elif 'uploaded_files' in st.session_state.keys():
+        uploaded_files= st.session_state['uploaded_files']
+
     #if uploaded_files != None:
     #    df= pd.DataFrame({'Image Name': [file.name for file in uploaded_files],'Label': ['Unlabelled']*len(uploaded_files), 'Incorrect': [False]*len(uploaded_files)})
     #    st.session_state.df= df
@@ -131,6 +137,7 @@ def run():
        uploaded_files= []
        print('Delete all pressed')
        del st.session_state['df']
+       del st.session_state['uploaded_files']
        st.rerun()
         
 
@@ -156,7 +163,8 @@ def run():
             col= 0
             labels= []
             for file in uploaded_files:
-                result= predict(file, 'SVN', classes, model)
+                print(st.session_state['modelname'])
+                result= predict(file, st.session_state['modelname'], classes, model)
                 labels.append([str(result)])
 
             for image in batch:
