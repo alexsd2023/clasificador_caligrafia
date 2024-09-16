@@ -10,6 +10,7 @@ from pathlib import Path
 import tensorflow as tf
 from bs4 import BeautifulSoup
 
+
 def read_htmlfile(html):
     file = open(html, "r")
     content = file.read()
@@ -29,7 +30,7 @@ def run():
     elif modelname == 'DECM annotations with Paragraphs':
         trained_nlp= spacy.load("./models/model_toponyms_patterns/model-last/")
 
-    uploaded_file= st.file_uploader("Choose a raw data file", type={'html'},  accept_multiple_files= False)
+    uploaded_file= st.file_uploader("Choose a raw data file", type=['html', 'htm', 'txt', 'text'],  accept_multiple_files= False)
     texto= ""
     
     if uploaded_file is not None:
@@ -41,12 +42,15 @@ def run():
             #print(fp)
         flag= True  
         with open(fp,'r') as file:
-            #texto = " ".join(line for line in file)  
-            texto= read_htmlfile(fp)    
+            if Path(uploaded_file.name).suffix in ['txt', 'text']:
+                texto = " ".join(line for line in file)
+            else:  
+                texto= read_htmlfile(fp)    
     
 
     doc= trained_nlp(texto)
 
+    #st.text_area("Annotated text", value= texto,  key= "text", height=520)
     for ent in doc.ents:
         print (ent.text, ent.label_, ent.start_char, ent.end_char)
 
