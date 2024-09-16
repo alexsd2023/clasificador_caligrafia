@@ -7,40 +7,49 @@ from spacy.tokens import Span
 import streamlit.components.v1 as components
 import tempfile
 from pathlib import Path
+import tensorflow as tf
+from bs4 import BeautifulSoup
+
+def read_htmlfile(html):
+    file = open(html, "r")
+    content = file.read()
+    soup=BeautifulSoup(content)
+    file.close()
+    return soup.get_text()
 
 def run():
         
-        tab1, tab2= st.tabs(['Entities', 'Parts of speech'])
-        nlp = spacy.load('es_core_news_sm')
-        fp= None
-        flag= False
-        texto= ""
+    modelname = st.radio(
+         "Select a model",
+        ["Spacy Ruler (Sentences)", "DECM annotations with Paragraphs"],
+         index=0,
+    )
+    if modelname == 'Spacy Ruler (Sentences)':
+        trained_nlp= spacy.load("./models/model_entities_ruler/model-last/")
+    elif modelname == 'DECM annotations with Paragraphs':
+        trained_nlp= spacy.load("./models/model_toponyms_patterns/model-last/")
 
-        if 'annot_file' in st.session_state:
-                uploaded_file= st.session_state['annot_file']
-                texto= ""
-                if uploaded_file is not None:
-                    print(uploaded_file) 
-                    with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
-                        #st.markdown("# Original text file")
-                        fp = Path(tmp_file.name)
-                        fp.write_bytes(uploaded_file.getvalue())
-                        #print(fp)
-                    flag= True  
-                    with open(fp,'r') as file:
-                        texto = " ".join(line for line in file)
+    uploaded_file= st.file_uploader("Choose a raw data file", type={'html'},  accept_multiple_files= False)
+    texto= ""
+    
+    if uploaded_file is not None:
+        print(uploaded_file) 
+        with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
+            #st.markdown("# Original text file")
+            fp = Path(tmp_file.name)
+            fp.write_bytes(uploaded_file.getvalue())
+            #print(fp)
+        flag= True  
+        with open(fp,'r') as file:
+            #texto = " ".join(line for line in file)  
+            texto= read_htmlfile(fp)    
+    
 
-        with tab1:
-            if flag:        
-                tab1.text_area("Annotated text", value= texto,  key= "text", height=520)              
-                doc= nlp(texto)
-                ent_html= displacy.render(doc, style="ent", jupyter= False)
-                tab1.markdown(ent_html, unsafe_allow_html= True)
-                #displacy.serve(doc, style="dep")
-        
-        with tab2:
-            if flag:
-                ent_html= displacy.render(doc, style="dep", jupyter= True)
-                tab2.markdown(ent_html, unsafe_allow_html= True)
-                 
-                
+    doc= trained_nlp(texto)
+
+    for ent in doc.ents:
+        print (ent.text, ent.label_, ent.start_char, ent.end_char)
+
+    ent_html= displacy.render(doc, style="ent", jupyter= False)
+    st.markdown(ent_html, unsafe_allow_html= True)
+
