@@ -87,7 +87,7 @@ def run():
    
     label= ":red[Handwriting] <_Text_> :red[Classification]"
 
-    st.title(label)
+    st.subheader(label, divider= True)
     
     classes = [ "ITALICA_REDONDA" ,  "ITALICA_CURSIVA" ,  "PROCESAL_2" ,  "Procesal_encadenada" , ]
     st.write(tf.__version__)

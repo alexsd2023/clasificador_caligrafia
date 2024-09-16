@@ -103,7 +103,8 @@ def update(image_name, col):
 def run():    
    
     
-    st.title(":red[Handwriting] _Text_ :red[Classification]")
+    label= ":red[Handwriting] _Text_ :red[Classification]"
+    st.subheader(label, divider= True)
     model= None
     if 'modelname' in st.session_state.keys():
         if st.session_state['modelname'] == 'EfficientNET':
@@ -173,7 +174,7 @@ def run():
             else:
                 modelname= 'EfficientNET'
                 model = tf.saved_model.load('./models/')
-                
+
             for file in uploaded_files:
                 
                 result= predict(file, modelname , classes, model)
