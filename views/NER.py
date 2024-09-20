@@ -38,8 +38,8 @@ def run():
 
     uploaded_file= st.file_uploader("Choose a raw data file", type=['html', 'htm', 'txt', 'text'],  accept_multiple_files= False)
     texto= ""
-    if 'uploaded_file' in st.session_state.keys():
-        uploaded_file= st.session_state['uploaded_file']
+    #if 'uploaded_file' in st.session_state.keys():
+    #    uploaded_file= st.session_state['uploaded_file']
 
     if uploaded_file is not None:
         print(uploaded_file) 
