@@ -34,31 +34,31 @@ def run():
         st.table(temp)
 
     options= []
-    basepath= './COLLECTIONS/'
-    for collection in glob.glob('./COLLECTIONS/*.csv'):
-        options.append(os.path.basename(collection))
+    #basepath= './COLLECTIONS/'
+    #for collection in glob.glob('./COLLECTIONS/*.csv'):
+    #    options.append(os.path.basename(collection))
     
-    collection= st.selectbox('Select a collection', options) 
-    df_collection= pd.read_csv(basepath+collection)
+    #collection= st.selectbox('Select a collection', options) 
+    #df_collection= pd.read_csv(basepath+collection)
     #st.dataframe(df_collection['Text'])
 
-    entities= []
-    for index in df_collection.index:
+    #entities= []
+    #for index in df_collection.index:
         #st.write(df_collection.loc[index, 'Text'])
-        entities.append(df_collection.loc[index, 'Text'])
-    total_coincidencias= 0
-    nowords= []
-    if temp is not None:
-        for index in temp.index:
-            if temp.loc[index, 'Text'] in entities:
-                total_coincidencias+=1
-            else:
-                palabra= temp.loc[index, 'Text']  
-                nowords= nowords +[palabra]
+    #    entities.append(df_collection.loc[index, 'Text'])
+    #total_coincidencias= 0
+    #nowords= []
+    #if temp is not None:
+    #    for index in temp.index:
+    #        if temp.loc[index, 'Text'] in entities:
+    #            total_coincidencias+=1
+    #        else:
+    #            palabra= temp.loc[index, 'Text']  
+    #            nowords= nowords +[palabra]
                      
-        st.write('Total de coincidencias: ', total_coincidencias)
-        st.write('No coincidencias: ', len(temp.index)-total_coincidencias)
-        s= ''
-        for i in nowords:
-            s += "-" + i + "\n"
-        st.markdown(s)
+    #    st.write('Total de coincidencias: ', total_coincidencias)
+    #    st.write('No coincidencias: ', len(temp.index)-total_coincidencias)
+    #    s= ''
+    #    for i in nowords:
+    #        s += "-" + i + "\n"
+    #    st.markdown(s)
