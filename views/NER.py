@@ -10,7 +10,7 @@ from pathlib import Path
 import tensorflow as tf
 from bs4 import BeautifulSoup
 import pandas as pd
-
+from io import StringIO
 
 def read_htmlfile(html):
     file = open(html, "r")
@@ -27,7 +27,7 @@ def run():
     modelname = st.radio(
          "Select a model",
         ["Spacy Ruler (Sentences)", "DECM annotations with Paragraphs"],
-         index=index,
+         index=0,
     )
     if modelname == 'Spacy Ruler (Sentences)':
         st.session_state['index']= 0
@@ -38,23 +38,45 @@ def run():
 
     uploaded_file= st.file_uploader("Choose a raw data file", type=['html', 'htm', 'txt', 'text'],  accept_multiple_files= False)
     texto= ""
-    #if 'uploaded_file' in st.session_state.keys():
-    #    uploaded_file= st.session_state['uploaded_file']
-
-    if uploaded_file is not None:
-        print(uploaded_file) 
-        st.session_state['uploaded_file']= uploaded_file
+    
+    
+    #if uploaded_file.type=='text/plain':   
+    if uploaded_file is not None: 
+        st.session_state['uploaded_file']= uploaded_file 
         with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
             #st.markdown("# Original text file")
             fp = Path(tmp_file.name)
             fp.write_bytes(uploaded_file.getvalue())
             #print(fp)
-        flag= True  
+        
         with open(fp,'r') as file:
-            if Path(uploaded_file.name).suffix in ['txt', 'text']:
+            if Path(uploaded_file.name).suffix in ['.txt', '.text']:
                 texto = " ".join(line for line in file)
-            else:  
-                texto= read_htmlfile(fp)    
+            else:
+                texto= read_htmlfile(fp)
+    elif 'uploaded_file' in st.session_state.keys():
+        uploaded_file= st.session_state['uploaded_file'] 
+        with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
+            #st.markdown("# Original text file")
+            fp = Path(tmp_file.name)
+            fp.write_bytes(uploaded_file.getvalue())
+            #print(fp)
+        
+        with open(fp,'r') as file:
+            if Path(uploaded_file.name).suffix in ['.txt', '.text']:
+                texto = " ".join(line for line in file) 
+            else:
+                texto= read_htmlfile(fp) 
+        
+        # with open(fp, encoding='utf8') as file:
+        #with open(fp,'r') as file:
+        #    print(Path(uploaded_file.name).suffix)
+        #    if Path(uploaded_file.name).suffix in ['.txt', '.text']:
+        #        #texto = " ".join(line for line in file)
+        #        with open(fp) as f:
+        #            texto = f.readlines()
+        #    else:  
+        #        texto= read_htmlfile(fp)    
     
 
     doc= trained_nlp(texto)
