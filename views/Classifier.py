@@ -89,7 +89,9 @@ def run():
 
     st.subheader(label, divider= True)
     
-    classes = [ "ITALICA_REDONDA" ,  "ITALICA_CURSIVA" ,  "PROCESAL_2" ,  "Procesal_encadenada" , ]
+    #classes = [ "ITALICA_REDONDA" ,  "ITALICA_CURSIVA" ,  "PROCESAL_2" ,  "Procesal_encadenada" , ]
+    classes = [ "_PSEUDO_REDONDA" ,  "_PROCESAL_ENCADENADA" ,  "_PROCESAL_SIMPLE" ,  "_REDONDA" ,  "_ITALICA_CURSIVA" , ]
+    
     st.write(tf.__version__)
     modelname = st.radio(
          "Select a model",
