@@ -112,7 +112,8 @@ def run():
         elif st.session_state['modelname'] == 'MobileNET': 
             model = tf.saved_model.load('./models/MODELO_TF_MOBILENET/')
 
-    classes = [ "ITALICA_REDONDA" ,  "ITALICA_CURSIVA" ,  "PROCESAL_2" ,  "Procesal_encadenada" , ]
+    #classes = [ "ITALICA_REDONDA" ,  "ITALICA_CURSIVA" ,  "PROCESAL_2" ,  "Procesal_encadenada" , ]
+    classes = [ "_PSEUDO_REDONDA" ,  "_PROCESAL_ENCADENADA" ,  "_PROCESAL_SIMPLE" ,  "_REDONDA" ,  "_ITALICA_CURSIVA" , ]
     
     
     #modelname = st.radio(
