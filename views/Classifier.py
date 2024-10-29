@@ -90,8 +90,7 @@ def run():
     st.subheader(label, divider= True)
     
     #classes = [ "ITALICA_REDONDA" ,  "ITALICA_CURSIVA" ,  "PROCESAL_2" ,  "Procesal_encadenada" , ]
-    classes = [ "_PSEUDO_REDONDA" ,  "_PROCESAL_ENCADENADA" ,  "_PROCESAL_SIMPLE" ,  "_REDONDA" ,  "_ITALICA_CURSIVA" , ]
-    
+    classes= [ "_PSEUDO_REDONDA" ,  "_PROCESAL_ENCADENADA" ,  "_PROCESAL_SIMPLE" ,  "_REDONDA" ,  "_ITALICA_CURSIVA" , ]
     st.write(tf.__version__)
     modelname = st.radio(
          "Select a model",
@@ -99,7 +98,7 @@ def run():
          index=0,
     )
     if modelname == 'EfficientNET':
-        model = tf.saved_model.load('./models/')
+        model = tf.saved_model.load('./models/MODELO_TF_EFFICIENTNET/')
     elif modelname == 'MobileNET':
         model = tf.saved_model.load('./models/MODELO_TF_MOBILENET/')
 
