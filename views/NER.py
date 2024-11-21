@@ -12,6 +12,13 @@ from bs4 import BeautifulSoup
 import pandas as pd
 from io import StringIO
 
+from annotated_text import annotated_text, parameters
+from annotated_text import annotation
+
+parameters.SHOW_LABEL_SEPARATOR= False
+parameters.BORDER_RADIUS= 0
+parameters.PADDING= "0 0.25rem"
+
 def read_htmlfile(html):
     file = open(html, "r")
     content = file.read()
@@ -61,10 +68,12 @@ def run():
             fp = Path(tmp_file.name)
             fp.write_bytes(uploaded_file.getvalue())
             #print(fp)
-        
+        data= []
         with open(fp,'r') as file:
             if Path(uploaded_file.name).suffix in ['.txt', '.text']:
                 texto = " ".join(line for line in file) 
+                for line in file:
+                    data.append(line)
             else:
                 texto= read_htmlfile(fp) 
         
@@ -89,6 +98,62 @@ def run():
     df_entities= pd.DataFrame(data, columns= ['Text', 'Label', 'Start char', 'End char'])
     st.session_state['df_entities']= df_entities
 
-    ent_html= displacy.render(doc, style="ent", jupyter= False)
-    st.markdown(ent_html, unsafe_allow_html= True)
+    #colors= {'Location': 'red', 'Person': 'blue', 'Measurement': 'green'}
+    #options= {"ents": ['Location', 'Person', 'Measurement'], "colors": colors}
+    #ent_html= displacy.render(doc, style="ent", jupyter= False, options= options)
+    #ent_html= displacy.render(doc, style="ent", options= options)
+    #st.markdown(ent_html, unsafe_allow_html= True)
 
+    def map_entities(doc):
+        plain_text = doc.text
+        entities = doc.ents
+        return resamble(plain_text, entities)
+    
+       
+
+    def resamble(plain_text, entities):
+        """ Resamble the entities to fit the text_annotate style."""
+        tuplas = tuple()
+        #print(plain_text)
+        prev_ent_end = 0
+        texto= ""
+        label=""
+        start=0
+        end= -1
+        for ent in entities:
+
+            texto= ent.text
+            label= ent.label_
+            start= ent.start_char
+            end= ent.end_char
+
+            #st.write(start)
+            #st.write(end)
+            
+            if len(tuplas)==0:
+                segmento= (plain_text[:start],)
+                tuplas= tuplas + segmento
+                segmento= (plain_text[:start]),
+                tuplas= tuplas + segmento
+            else:
+                segmento= (plain_text[prev_ent_end:start],)
+                tuplas= tuplas + segmento
+                segmento= (plain_text[start:end], label),
+                tuplas= tuplas + segmento
+
+            prev_ent_end= end
+            #print(tuplas)
+            #continue
+
+        segmento= (plain_text[end:],)
+        tuplas= tuplas + segmento
+             
+        return tuplas
+
+    sents_plus_ents = map_entities(doc)
+    #st.write(sents_plus_ents)
+
+    annotated_text(*sents_plus_ents)
+    #annotated_text("this", ("is", "Verb"),"asdfsa", ("aother", "Verb"),  ("is", "Noun"))
+    #st.write(df_entities)
+    #st.write(data)
