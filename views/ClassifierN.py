@@ -8,7 +8,7 @@ from PIL import Image, ImageOps
 import glob
 import os
 
-from annotated_text import annotated_text
+#from annotated_text import annotated_text
 from st_click_detector import click_detector
 from bs4 import BeautifulSoup
 from utils import annotate_txt
