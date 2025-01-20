@@ -5,6 +5,7 @@ pandas
 pydeck
 matplotlib
 st-annotated-text
+htbuilder
 st_click_detector
 beautifulsoup4
 spacy
