@@ -1,4 +1,4 @@
-streamlit
+streamlit == 1.39
 streamlit-option-menu
 numpy
 pandas
