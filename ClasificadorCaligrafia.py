@@ -4,7 +4,7 @@
 import streamlit as st
 import base64
 from streamlit_option_menu import option_menu
-from views import Classifier,  Statistics, Users, ClassifierN, NER
+from views import Classifier,  Statistics, Users, ClassifierN
 
 
 #from streamlit_extras.app_logo import add_logo
