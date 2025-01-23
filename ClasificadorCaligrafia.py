@@ -77,7 +77,7 @@ if authentication_status:
                 st.cache_data.clear()
                 
 
-        option= option_menu("AI HUB", ["Classifier", 'N-Classifier', 'Users'], icons= ['gear', 'gear', 'markdown'])
+        option= option_menu("AI HUB", ["Classifier", 'N-Classifier'], icons= ['gear', 'gear'])
         
     if option == "Classifier":
         Classifier.run()
